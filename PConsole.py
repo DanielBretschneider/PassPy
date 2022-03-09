@@ -101,13 +101,15 @@ class PConsole:
         print("-----------------------------------------")
 
         self.print_help_command("add", "Add new set of credentials")
-        self.print_help_command("login", "Authenticate with Email and Password")
-        self.print_help_command("count", "Count entries in database.")
+        self.print_help_command("count", "Count entries in database")
         self.print_help_command("delete", "Delete specific entry in database. Required argument: ID")
         self.print_help_command("exit", "Exits the password manager")
+        self.print_help_command("export", "Export credentials as CSV-File in password secured zip file")
         self.print_help_command("help", "Prints this wonderful message")
         self.print_help_command("hide", "Hide entry in database. Required argument: ID")
+        self.print_help_command("import", "Import CSV-File with credentials")
         self.print_help_command("reveal", "Reveal password of specific entry. Required argument: ID")
+        self.print_help_command("login", "Authenticate with Email and Password")
         self.print_help_command("search", "Searches for entries. Optional arguments: ID, Title, username, URL")
         self.print_help_command("show", "Shows specific entry. Required argument: ID")
 
