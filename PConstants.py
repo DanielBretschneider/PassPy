@@ -46,3 +46,17 @@ CMD_ATT_ID = "id"
 CMD_ATT_TITLE = "title"
 CMD_ATT_USERNAME = "username"
 CMD_ATT_URL = "url"
+
+#
+# DATABASE
+#
+SQL_STATEMENT_INITIAL_CREDENTIAL_TABLE = """
+                                CREATE TABLE IF NOT EXISTS credentials (
+                                    ID INTEGER PRIMARY KEY,
+                                    TITLE TEXT NOT NULL,
+                                    USERNAME TEXT NOT NULL,
+                                    PASSWORD TEXT NOT NULL,
+                                    URL TEXT NOT NULL,
+                                    creation_date TEXT NOT NULL,
+                                    HIDDEN TEXT NOT NULL
+                                )"""

@@ -124,6 +124,7 @@ class PConsole:
         Prints the number of entries in db
         :return:
         """
+        
 
     def add_entry(self):
         """
