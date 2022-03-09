@@ -7,7 +7,7 @@ from pathlib import Path
 # GENERAL
 #
 COPYRIGHT = "(C) 2022 Daniel Bretschneider"
-VERSION = "v1.1.3"
+VERSION = "v1.1.6"
 
 
 #
