@@ -3,7 +3,10 @@
 
 from pyfiglet import Figlet
 import PConstants
+import sqlite3
 import readline
+
+from PDatabase import print_message
 
 
 class PConsole:
@@ -123,8 +126,15 @@ class PConsole:
         """
         Prints the number of entries in db
         :return:
-        """
-
+        """ 
+        try:
+            connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+            cursor = connection.cursor()
+            cursor.execute('SELECT COUNT(*) from credentials')
+            cur_result = cursor.fetchone()
+            print("Total: " + str(cur_result[0]))
+        except Exception as e:
+            print_message("Error while trying to connect to database. \nError:\n" + str(e), 0)
 
     def add_entry(self):
         """
