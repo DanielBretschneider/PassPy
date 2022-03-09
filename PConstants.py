@@ -7,6 +7,13 @@
 COPYRIGHT = "(C) 2022 Daniel Bretschneider"
 VERSION = "v1.1.3"
 
+
+#
+# PATHS
+#
+PASSPY_DATABASE_PATH = "~/.passpy/"
+PASSPY_DATABASE_FILE = "passpy.db"
+
 #
 # CLI
 #

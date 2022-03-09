@@ -4,6 +4,7 @@
 # Simple password manager written in python
 #
 # (C) 2022 Daniel Bretschneider, Wien
+# Using 
 # email daniel@bretschneider.cc
 # -----------------------------------------------------------
 
