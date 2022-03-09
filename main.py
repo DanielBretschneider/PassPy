@@ -10,6 +10,7 @@
 
 from PConsole import PConsole
 import PConstants
+import PDatabase
 
 
 def setup():
@@ -19,8 +20,14 @@ def setup():
     :param self:
     :return:
     """
+    # start console
     console = PConsole()
     console.welcome_message()
+
+    # create / check db files
+    PDatabase.create_database_if_not_exists()
+
+    # begin
     console.start()
 
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # encoding: utf-8
 
+from pathlib import Path
+
 #
 # GENERAL
 #
@@ -11,8 +13,9 @@ VERSION = "v1.1.3"
 #
 # PATHS
 #
-PASSPY_DATABASE_PATH = "~/.passpy/"
-PASSPY_DATABASE_FILE = "passpy.db"
+USER_HOME = str(Path.home())
+PASSPY_DATABASE_PATH = USER_HOME + "/.passpy/"
+PASSPY_DATABASE_FILE = PASSPY_DATABASE_PATH + "passpy.db"
 
 #
 # CLI
