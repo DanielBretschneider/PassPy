@@ -62,6 +62,26 @@ def create_db_file():
     create_database_table(con, PConstants.SQL_STATEMENT_INITIAL_CREDENTIAL_TABLE)
 
 
+def init_auth_file():
+    """
+    Creates auth file if not existing or empty
+    """
+    if not os.path.exists(PConstants.PASSPY_AUTH_FILE) or os.path.getsize(PConstants.PASSPY_AUTH_FILE) == 0:
+        auth_file = open(PConstants.PASSPY_AUTH_FILE, "w")
+        print_message("Registering. Please remember your login credentials!", 0)
+        uname = input("username: ")
+        passwd = input("password: ")
+
+        if not uname or not passwd:
+            print_message("Username or Password cannot be empty!", 1)
+            return None
+
+        auth_file.write(uname + PConstants.CLI_NEWLINE)
+        auth_file.write(passwd + PConstants.CLI_NEWLINE)
+        print_message("Thank you! Have fun and log in to use passpy." + PConstants.CLI_NEWLINE, 0)
+        auth_file.close()
+    
+
 def database_connection():
     """
     Connect to SQLite Database

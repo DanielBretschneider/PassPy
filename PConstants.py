@@ -17,6 +17,7 @@ USER_HOME = str(Path.home())
 PASSPY_DATABASE_PATH = USER_HOME + "/.passpy/"
 PASSPY_DATABASE_FILE = PASSPY_DATABASE_PATH + "passpy.db"
 PASSPY_DATABASE_EXPORT_FILE = USER_HOME + "/Downloads/passpy_export.zip"
+PASSPY_AUTH_FILE = PASSPY_DATABASE_PATH + "auth.txt"
 
 #
 # CLI
@@ -31,7 +32,6 @@ CLI_PROMPT = CLI_COL_BOLD + "[passpy] > " + CLI_COL_END
 
 # commands
 CMD_ADD = "add"
-CMD_LOGIN = "login"
 CMD_COUNT = "count"
 CMD_DELETE = "delete"
 CMD_EXIT = "exit"

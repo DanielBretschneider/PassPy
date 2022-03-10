@@ -68,8 +68,6 @@ class PConsole:
             self.print_db_count()
         elif command == PConstants.CMD_ADD:
             self.add_entry()
-        elif command == PConstants.CMD_LOGIN:
-            self.login()
         elif command == PConstants.CMD_EXPORT:
             self.export_csv()
         elif command == PConstants.CMD_IMPORT:
@@ -120,7 +118,6 @@ class PConsole:
         self.print_help_command("hide", "Hide record in PassPy. Required argument: ID")
         self.print_help_command("import", "Import CSV-File with credentials")
         self.print_help_command("reveal", "Reveal password of specific record. Required argument: ID")
-        self.print_help_command("login", "Authenticate with Email and Password")
         self.print_help_command("search", "Search for records. Optional arguments: ID, Title, username, URL")
         self.print_help_command("show", "Shows specific record. Required argument: ID")
         self.print_help_command("unhide", "Unhide specific record. Required argument: ID")
@@ -167,7 +164,47 @@ class PConsole:
         Login / Authenticate
         :return:
         """
+        # check if user already registrated
+        PDatabase.init_auth_file()
 
+        # get authentication data
+        uname, passwd = self.get_auth_data()
+
+        # authenticate user
+        self.authentication(uname, passwd)
+        
+
+    def get_auth_data(self):
+        """
+        Get username and password for auth file
+        """
+        uname = ""
+        passwd = ""
+        with open(PConstants.PASSPY_AUTH_FILE, 'r') as auth_file:
+            lines = auth_file.readlines()
+            if len(lines) == 2:
+                uname = lines[0]
+                passwd = lines[1]
+                return uname, passwd
+            else:
+                self.print_message("There seems to be a problem with your auth file!", 1)
+
+
+    def authentication(self, u, p):
+        """
+        authenticate user
+        """
+        uname = input("Username: ").strip()
+        passwd = input("Password: ").strip()
+        u = u.strip()
+        p = p.strip()
+
+        if uname == u and passwd == p:
+            self.print_message("logged in." + PConstants.CLI_NEWLINE, 0)
+        else:
+            self.print_message("Wrong username or password." + PConstants.CLI_NEWLINE, 1)
+            self.authentication(u, p)
+            
 
     def hide(self, cmd):
         """
