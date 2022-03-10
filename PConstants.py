@@ -20,13 +20,13 @@ PASSPY_DATABASE_FILE = PASSPY_DATABASE_PATH + "passpy.db"
 #
 # CLI
 #
-CLI_PROMPT = "[passpy] > "
 CLI_MSG_INFO = "[*] "
 CLI_MSG_ERR = "[-] "
 CLI_NEWLINE = "\n"
 CLI_TAB = "\t"
 CLI_COL_END = '\033[0m'
 CLI_COL_BOLD = '\033[1m'
+CLI_PROMPT = CLI_COL_BOLD + "[passpy] > " + CLI_COL_END
 
 # commands
 CMD_ADD = "add"
@@ -48,6 +48,7 @@ CMD_ATT_ID = "id"
 CMD_ATT_TITLE = "title"
 CMD_ATT_USERNAME = "username"
 CMD_ATT_URL = "url"
+CMD_ATT_SAMPLE_PW = "**************"
 
 #
 # DATABASE

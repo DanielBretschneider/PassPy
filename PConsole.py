@@ -20,6 +20,7 @@ class PConsole:
         """
         pass
 
+
     def welcome_message(self):
         """
         Prints welcome message on program start
@@ -28,6 +29,7 @@ class PConsole:
         print(figlet.renderText("PassPy"), end='')
         print(PConstants.VERSION)
         print(PConstants.COPYRIGHT + PConstants.CLI_NEWLINE)
+
 
     def start(self):
         """
@@ -38,6 +40,7 @@ class PConsole:
             command = self.read_command()
             self.process_command(command)
 
+
     def read_command(self):
         """
         Get command from user via input and return as string
@@ -45,6 +48,7 @@ class PConsole:
         """
         command = input(PConstants.CLI_PROMPT)
         return command
+
 
     def process_command(self, command):
         """
@@ -74,12 +78,15 @@ class PConsole:
             self.hide_entry()
         elif splt_command[0] == PConstants.CMD_DELETE:
             self.delete_entry()
+        elif splt_command[0] == PConstants.CMD_REVEAL:
+            self.show(splt_command, 1)
         elif splt_command[0] == PConstants.CMD_SEARCH:
             self.search()
         elif splt_command[0] == PConstants.CMD_SHOW:
-            self.show(splt_command)
+            self.show(splt_command, 0)
         else:
             self.print_message("Command '" + command + "' not found.", 1)
+
 
     def print_message(self, text, type):
         """
@@ -92,6 +99,7 @@ class PConsole:
             print(PConstants.CLI_MSG_ERR + text)
         else:
             print(PConstants.CLI_MSG_INFO + text)
+
 
     def print_help_message(self):
         """
@@ -117,6 +125,7 @@ class PConsole:
 
         print(PConstants.CLI_NEWLINE)
 
+
     def print_help_command(self, command, description):
         """
         Line for command
@@ -125,6 +134,7 @@ class PConsole:
         """
         print(PConstants.CLI_COL_BOLD + command + PConstants.CLI_COL_END +
               PConstants.CLI_TAB + description)
+
 
     def print_db_count(self):
         """
@@ -164,11 +174,13 @@ class PConsole:
         :return:
         """
 
+
     def hide_entry(self):
         """
         Hide entry in db
         :return:
         """
+
 
     def delete_entry(self):
         """
@@ -176,10 +188,12 @@ class PConsole:
         :return:
         """
     
+
     def export_csv(self):
         """
         Export contents of SQLite DB as CSV-File
         """
+
 
     def import_csv(self):
         """
@@ -198,6 +212,7 @@ class PConsole:
                 line = import_file.readline()
                 cnt+=1
 
+
     def insert_line(self, splitted_line, cnt):
         """
         Check if line has right format and insert into db
@@ -209,6 +224,7 @@ class PConsole:
                 PDatabase.insert(splitted_line[0], splitted_line[1], splitted_line[2])
         else:
             self.print_message("There was error importing credentials at line #" + str(cnt), 1)                
+
 
     def check_format(self, splitted_line):
         """
@@ -222,6 +238,7 @@ class PConsole:
 
         return True
 
+
     def search(self):
         """
         Implements search function to db
@@ -229,7 +246,8 @@ class PConsole:
         :return:
         """
 
-    def show(self, cmd):
+
+    def show(self, cmd, rev):
         """
         Implements search function to db
         (returns only data if search term is correct)
@@ -247,19 +265,22 @@ class PConsole:
             cursor = connection.cursor()
             cursor.execute('SELECT * from credentials where id = ' + str(id))
             cur_result = cursor.fetchone()
-            self.print_credentials(cur_result)
+            self.print_credentials(cur_result, rev)
         except Exception as e:
             self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
 
 
-    def print_credentials(self, cred):
+    def print_credentials(self, cred, rev):
         """
         Print credentials formatted
         """
         print(PConstants.CLI_NEWLINE + "ID:\t\t" + str(cred[0]))
         print("Title:\t\t" + cred[1])
         print("Username:\t" + cred[2])
-        print("Passwort:\t" + cred[3])
+        if (rev == 0):
+            print("Password:\t" + PConstants.CMD_ATT_SAMPLE_PW)
+        else:
+            print("Password:\t" + cred[3].strip())
         print("URL:\t\t" + cred[4].strip())
         print("Creation Date:\t" + cred[5])
         print("Hidden:\t\t" + cred[6] + PConstants.CLI_NEWLINE)        
