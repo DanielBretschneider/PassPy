@@ -112,16 +112,16 @@ class PConsole:
 
         self.print_help_command("add", "Add new set of credentials")
         self.print_help_command("count", "Count entries in database")
-        self.print_help_command("delete", "Delete specific entry in database. Required argument: ID")
+        self.print_help_command("delete", "Delete specific record in database. Required argument: ID")
         self.print_help_command("exit", "Exits the password manager")
         self.print_help_command("export", "Export credentials as CSV-File in password secured zip file")
         self.print_help_command("help", "Prints this wonderful message")
-        self.print_help_command("hide", "Hide entry in database. Required argument: ID")
+        self.print_help_command("hide", "Hide record in PassPy. Required argument: ID")
         self.print_help_command("import", "Import CSV-File with credentials")
-        self.print_help_command("reveal", "Reveal password of specific entry. Required argument: ID")
+        self.print_help_command("reveal", "Reveal password of specific record. Required argument: ID")
         self.print_help_command("login", "Authenticate with Email and Password")
-        self.print_help_command("search", "Searches for entries. Optional arguments: ID, Title, username, URL")
-        self.print_help_command("show", "Shows specific entry. Required argument: ID")
+        self.print_help_command("search", "Search for records. Optional arguments: ID, Title, username, URL")
+        self.print_help_command("show", "Shows specific record. Required argument: ID")
 
         print(PConstants.CLI_NEWLINE)
 
@@ -141,14 +141,7 @@ class PConsole:
         Prints the number of entries in db
         :return:
         """ 
-        try:
-            connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
-            cursor = connection.cursor()
-            cursor.execute('SELECT COUNT(*) from credentials')
-            cur_result = cursor.fetchone()
-            print("Total: " + str(cur_result[0]))
-        except Exception as e:
-            self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+        print("Total number of records in database: " + PDatabase.get_count() + PConstants.CLI_NEWLINE)
 
 
     def add_entry(self):
@@ -163,7 +156,7 @@ class PConsole:
 
         if title and username and password:
             PDatabase.insert(title, username, password, url)
-            self.print_message("Successfully added credentials!", 0)
+            self.print_message("Successfully added credentials with id = " + PDatabase.get_count() + PConstants.CLI_NEWLINE, 0)
         else:
             self.print_message("Title, username and password cannot be empty!", 1)
 
@@ -207,7 +200,7 @@ class PConsole:
                 cursor = connection.cursor()
                 cursor.execute('DELETE FROM credentials WHERE id = ' + str(id))
                 connection.commit()
-                self.print_message("Record #" + str(id) + " successfully deleted.", 0)
+                self.print_message("Record #" + str(id) + " successfully deleted." + PConstants.CLI_NEWLINE, 0)
             except Exception as e:
                 self.print_message("Record doesn't exist.", 1)
                 return

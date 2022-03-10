@@ -145,3 +145,17 @@ def check_if_id_exists(id):
             return False
     except Exception as e:
         print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+
+def get_count():
+    """
+    Check if record with given id exists.
+    If there is a record with a higher id, then it must have been deleted. 
+    """
+    try:
+        connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+        cursor = connection.cursor()
+        cursor.execute('SELECT MAX(id) FROM credentials')
+        cur_result = cursor.fetchone()
+        return str(cur_result[0])
+    except Exception as e:
+        print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
