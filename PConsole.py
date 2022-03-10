@@ -77,7 +77,7 @@ class PConsole:
         elif splt_command[0] == PConstants.CMD_SEARCH:
             self.search()
         elif splt_command[0] == PConstants.CMD_SHOW:
-            self.show()
+            self.show(splt_command)
         else:
             self.print_message("Command '" + command + "' not found.", 1)
 
@@ -229,9 +229,37 @@ class PConsole:
         :return:
         """
 
-    def show(self):
+    def show(self, cmd):
         """
         Implements search function to db
         (returns only data if search term is correct)
         :return:
         """
+        id = 0
+
+        if len(cmd) > 1:
+            id = cmd[1]
+        else:
+            id = input("Enter ID: ")
+
+        try:
+            connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+            cursor = connection.cursor()
+            cursor.execute('SELECT * from credentials where id = ' + str(id))
+            cur_result = cursor.fetchone()
+            self.print_credentials(cur_result)
+        except Exception as e:
+            self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+
+
+    def print_credentials(self, cred):
+        """
+        Print credentials formatted
+        """
+        print(PConstants.CLI_NEWLINE + "ID:\t\t" + str(cred[0]))
+        print("Title:\t\t" + cred[1])
+        print("Username:\t" + cred[2])
+        print("Passwort:\t" + cred[3])
+        print("URL:\t\t" + cred[4].strip())
+        print("Creation Date:\t" + cred[5])
+        print("Hidden:\t\t" + cred[6] + PConstants.CLI_NEWLINE)        
