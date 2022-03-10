@@ -81,7 +81,7 @@ class PConsole:
         elif splt_command[0] == PConstants.CMD_REVEAL:
             self.show(splt_command, 1)
         elif splt_command[0] == PConstants.CMD_SEARCH:
-            self.search()
+            self.search(splt_command)
         elif splt_command[0] == PConstants.CMD_UNHIDE:
             self.unhide(splt_command)
         elif splt_command[0] == PConstants.CMD_SHOW:
@@ -111,7 +111,6 @@ class PConsole:
         """
         print("\nCommand | Description")
         print("-----------------------------------------")
-
         self.print_help_command("add", "Add new set of credentials")
         self.print_help_command("count", "Count entries in database")
         self.print_help_command("delete", "Delete specific record in database. Required argument: ID")
@@ -125,7 +124,6 @@ class PConsole:
         self.print_help_command("search", "Search for records. Optional arguments: ID, Title, username, URL")
         self.print_help_command("show", "Shows specific record. Required argument: ID")
         self.print_help_command("unhide", "Unhide specific record. Required argument: ID")
-
         print(PConstants.CLI_NEWLINE)
 
 
@@ -293,13 +291,39 @@ class PConsole:
         return True
 
 
-    def search(self):
+    def search(self, cmd):
         """
         Implements search function to db
         (returns more than one result, if found)
         :return:
         """
+        search_term = 0
 
+        if len(cmd) > 1:
+            search_term = cmd[1]
+        else:
+            search_term = input("Search term: ")
+
+        if len(search_term) <= PConstants.MAX_SEARCH_TERM_LENGTH-1:
+            self.print_message("Your search term must a least be 3 characters long." + PConstants.CLI_NEWLINE, 1)
+            return None
+
+        try:
+            connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+            cursor = connection.cursor()
+            cursor.execute('select * from credentials WHERE title LIKE \'%' + search_term +'%\' or username LIKE \'%' + search_term +'%\' or url LIKE \'%' + search_term + '%\'')
+            cur_result = cursor.fetchall()
+            if len(cur_result) == 1:
+                self.print_credentials(cur_result[0], 0)
+                self.print_message(str(len(cur_result)) + " records found." + PConstants.CLI_NEWLINE, 0)
+            elif len(cur_result) > 1:
+                self.print_mutliple_credentials(cur_result)
+                self.print_message(str(len(cur_result)) + " records found." + PConstants.CLI_NEWLINE, 0)
+            else:
+                self.print_message("No records found for '" + search_term + "'." + PConstants.CLI_NEWLINE, 0)
+        except Exception as e:
+            self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+            return
 
     def show(self, cmd, rev):
         """
@@ -351,6 +375,16 @@ class PConsole:
         print("URL:\t\t" + cred[4].strip())
         print("Creation Date:\t" + cred[5])
         print("Hidden:\t\t" + cred[6] + PConstants.CLI_NEWLINE)        
+
+
+    def print_mutliple_credentials(self, cred_list):
+        """
+        prints multiple credentials and uses print_credential function
+        in a loop
+        """
+        for credential_item in cred_list:
+            self.print_credentials(credential_item, 0)
+            print("-"*30)
 
     
     def unhide(self, cmd):

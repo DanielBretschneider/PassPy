@@ -50,6 +50,7 @@ CMD_ATT_TITLE = "title"
 CMD_ATT_USERNAME = "username"
 CMD_ATT_URL = "url"
 CMD_ATT_SAMPLE_PW = "**************"
+MAX_SEARCH_TERM_LENGTH = 3
 
 #
 # DATABASE
