@@ -201,7 +201,8 @@ class PConsole:
         p = p.strip()
 
         if uname == u and passwd == p:
-            self.print_message("logged in." + PConstants.CLI_NEWLINE, 0)
+            print("")
+            self.print_message("logged in.", 0)
         else:
             self.print_message("Wrong username or password." + PConstants.CLI_NEWLINE, 1)
             self.authentication(u, p)
@@ -277,7 +278,7 @@ class PConsole:
         """
         Export contents of SQLite DB as CSV-File
         """ 
-        password = input("Enter password for .zip file: ")
+        password = getpass("Enter password for .zip file: ")
         pyminizip.compress(PConstants.PASSPY_DATABASE_FILE, None, PConstants.PASSPY_DATABASE_EXPORT_FILE, password, PConstants.ZIP_COMPRESS_LEVEL)
         self.print_message("Successfully exported password database to '" + PConstants.PASSPY_DATABASE_EXPORT_FILE + "'" + PConstants.CLI_NEWLINE, 0)
 

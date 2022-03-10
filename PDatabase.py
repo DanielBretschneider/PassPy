@@ -35,7 +35,7 @@ def create_database_if_not_exists():
             print_message("PassPy database not found. Creating file '" + PConstants.PASSPY_DATABASE_FILE + "'", 1)
             create_db_file()
         else:
-            print_message("Connection to database established.", 0)
+            print_message("Connection to database established." + PConstants.CLI_NEWLINE, 0)
 
 
 def create_directory(path): 
