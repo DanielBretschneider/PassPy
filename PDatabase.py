@@ -4,6 +4,7 @@
 import os
 import sqlite3
 from pytz import NonExistentTimeError
+from datetime import datetime
 import PConstants
 
 def print_message(text, type):
@@ -28,17 +29,11 @@ def create_database_if_not_exists():
         create_directory(PConstants.PASSPY_DATABASE_PATH)
         
         # create db file
-        f = open(PConstants.PASSPY_DATABASE_FILE, "w")
-        f.close()
-
-        # create credentials table
-        con = database_connection()
-        create_database_table(con, PConstants.SQL_STATEMENT_INITIAL_CREDENTIAL_TABLE)
+        create_db_file()
     else:
-        if not os.path.isfile(PConstants.PASSPY_DATABASE_FILE):
+        if not os.path.exists(PConstants.PASSPY_DATABASE_FILE):
             print_message("PassPy database not found. Creating file '" + PConstants.PASSPY_DATABASE_FILE + "'", 1)
-            f = open(PConstants.PASSPY_DATABASE_FILE, "w")
-            f.close()
+            create_db_file()
         else:
             print_message("Connection to database established.", 0)
 
@@ -51,7 +46,20 @@ def create_directory(path):
         print_message("PassPy database not found. Creating file '" + PConstants.PASSPY_DATABASE_FILE + "'", 1)
         os.mkdir(path)
     except FileExistsError:
-        print_message("PassPy directory already existed.", 0)
+        print_message("There was an error creating directory " + PConstants.PASSPY_DATABASE_PATH, 1)
+
+
+def create_db_file():
+    """
+    Create and initalize db file
+    """
+    # create db file
+    f = open(PConstants.PASSPY_DATABASE_FILE, "w")
+    f.close()
+
+    # create credentials table
+    con = database_connection()
+    create_database_table(con, PConstants.SQL_STATEMENT_INITIAL_CREDENTIAL_TABLE)
 
 
 def database_connection():
@@ -85,3 +93,29 @@ def create_database_table(db_connection, create_table_sql_statement):
         db_connection.commit()
     except Exception as e:
         print_message("Error while executing sql-statement \n" + create_table_sql_statement + "\nError:\n" + str(e), 1)
+
+
+def insert(title, username, password, url=""):
+    """
+    INSERT into 'credentials' table in database
+    """
+    # create insert statement
+    insert_statement = """INSERT INTO credentials (TITLE, USERNAME, PASSWORD, URL, CREATION_DATE, HIDDEN) VALUES ('""" + title + "', '" + username + "', '" + password + "', '" + url +\
+                            "', '" + get_datetime_string() + "', '" + str(0) + "')"
+    
+    try:
+        # execute insert statement
+        # connection to db
+        db_connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+        cursor = db_connection.cursor()
+        cursor.execute(insert_statement)
+        db_connection.commit()
+    except Exception as e:
+        print_message("Error while inserting into database. Error:\n" + str(e), 1)
+    
+
+def get_datetime_string():
+    """
+    Get datetime as string.
+    """
+    return str(datetime.now())

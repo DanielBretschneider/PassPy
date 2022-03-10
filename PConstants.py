@@ -34,8 +34,10 @@ CMD_LOGIN = "login"
 CMD_COUNT = "count"
 CMD_DELETE = "delete"
 CMD_EXIT = "exit"
+CMD_EXPORT = "export"
 CMD_HELP = "help"
 CMD_HIDE = "hide"
+CMD_IMPORT = "import"
 CMD_REVEAL = "reveal"
 CMD_SHOW = "show"
 CMD_SEARCH = "search"
@@ -56,7 +58,7 @@ SQL_STATEMENT_INITIAL_CREDENTIAL_TABLE = """
                                     TITLE TEXT NOT NULL,
                                     USERNAME TEXT NOT NULL,
                                     PASSWORD TEXT NOT NULL,
-                                    URL TEXT NOT NULL,
-                                    creation_date TEXT NOT NULL,
+                                    URL TEXT,
+                                    CREATION_DATE TEXT NOT NULL,
                                     HIDDEN TEXT NOT NULL
                                 )"""

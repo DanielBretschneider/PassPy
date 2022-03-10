@@ -5,9 +5,8 @@ from pyfiglet import Figlet
 import PConstants
 import sqlite3
 import readline
-
 from PDatabase import print_message
-
+from PDatabase import insert
 
 class PConsole:
     """
@@ -68,6 +67,10 @@ class PConsole:
             self.add_entry()
         elif command == PConstants.CMD_LOGIN:
             self.login()
+        elif command == PConstants.CMD_EXPORT:
+            self.export_csv()
+        elif command == PConstants.CMD_IMPORT:
+            self.import_csv()    
         elif splt_command[0] == PConstants.CMD_HIDE:
             self.hide_entry()
         elif splt_command[0] == PConstants.CMD_DELETE:
@@ -167,6 +170,52 @@ class PConsole:
         Delete entry in db.
         :return:
         """
+    
+    def export_csv(self):
+        """
+        Export contents of SQLite DB as CSV-File
+        """
+
+    def import_csv(self):
+        """
+        Import credentials in CSV-file in PassPy-Format
+        Title;Username;Password;URL (optional);
+        """
+        print_message("File must be in following format: title;username;password;url(optional, can be left blank)", 0)
+        import_file_path = input("Please specify (absolute) path to csv-file: ")
+        
+        with open (str(import_file_path)) as import_file:
+            line = import_file.readline()
+            cnt = 1
+            while line:
+                splitted_line = line.split(";")
+                self.insert_line(splitted_line, cnt)
+                line = import_file.readline()
+                cnt+=1
+
+    def insert_line(self, splitted_line, cnt):
+        """
+        Check if line has right format and insert into db
+        """
+        if len(splitted_line) >= 3 and self.check_format(splitted_line):
+            if len(splitted_line) == 4:
+                insert(splitted_line[0].strip(), splitted_line[1], splitted_line[2], splitted_line[3])
+            else:
+                insert(splitted_line[0], splitted_line[1], splitted_line[2])
+        else:
+            print_message("There was error importing credentials at line #" + str(cnt), 1)                
+
+    def check_format(self, splitted_line):
+        """
+        Check if first three elements are filled
+        """
+        for i in range(3):
+            if str(splitted_line[i].strip()):
+                pass
+            else:
+                return False
+
+        return True
 
     def search(self):
         """
