@@ -183,6 +183,10 @@ class PConsole:
         else:
             id = input("Enter ID: ")
 
+        if not self.check_if_id_valid(id):
+            self.print_message("ID is emtpy or not a number. Aborted." + PConstants.CLI_NEWLINE, 1)
+            return None
+
         if not PDatabase.check_if_id_exists(id):
             self.print_message("No record with id " + str(id) + " found." + PConstants.CLI_NEWLINE, 1)
             return None
@@ -207,6 +211,10 @@ class PConsole:
             id = cmd[1]
         else:
             id = input("Enter ID: ")
+
+        if not self.check_if_id_valid(id):
+            self.print_message("ID is emtpy or not a number. Aborted." + PConstants.CLI_NEWLINE, 1)
+            return None
         
         if not PDatabase.check_if_id_exists(id):
             self.print_message("Record with ID " + id + " does not exist.", 1)
@@ -300,6 +308,10 @@ class PConsole:
         else:
             id = input("Enter ID: ")
 
+        if not self.check_if_id_valid(id):
+            self.print_message("ID is emtpy or not a number. Aborted." + PConstants.CLI_NEWLINE, 1)
+            return None
+
         if not PDatabase.check_if_id_exists(id):
             self.print_message("Record with ID " + id + " does not exist." + PConstants.CLI_NEWLINE, 1)
             return None
@@ -347,6 +359,10 @@ class PConsole:
         else:
             id = input("Enter ID: ")
 
+        if not self.check_if_id_valid(id):
+            self.print_message("ID is emtpy or not a number. Aborted." + PConstants.CLI_NEWLINE, 1)
+            return None
+
         if not PDatabase.check_if_id_exists(id):
             self.print_message("No record with id " + str(id) + " found." + PConstants.CLI_NEWLINE, 1)
             return None
@@ -358,3 +374,13 @@ class PConsole:
         hide_query = "UPDATE credentials SET HIDDEN = 0 WHERE id = " + str(id)
         PDatabase.execute_query(hide_query)
         self.print_message("Record with id " + str(id) + " is now visible again." + PConstants.CLI_NEWLINE, 0)
+
+    
+    def check_if_id_valid(self, id):
+        """
+        Check if id is not empty and a number
+        """
+        if id and (type(id) == int or id.isnumeric()):
+            return True
+        else:
+            return False
