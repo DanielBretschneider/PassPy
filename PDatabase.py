@@ -146,6 +146,25 @@ def check_if_id_exists(id):
     except Exception as e:
         print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
 
+
+def check_if_record_hidden(id):
+    """
+    Check if specific record is hidden
+    """
+    try:
+        connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+        cursor = connection.cursor()
+        cursor.execute('SELECT HIDDEN FROM credentials WHERE id = ' + str(id))
+        cur_result = cursor.fetchone()
+        
+        if cur_result[0] == "1":
+            return True
+        else:
+            return False
+    except Exception as e:
+        print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+
+
 def get_count():
     """
     Check if record with given id exists.

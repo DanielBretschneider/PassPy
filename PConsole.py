@@ -75,13 +75,15 @@ class PConsole:
         elif command == PConstants.CMD_IMPORT:
             self.import_csv()    
         elif splt_command[0] == PConstants.CMD_HIDE:
-            self.hide_entry()
+            self.hide(splt_command)
         elif splt_command[0] == PConstants.CMD_DELETE:
             self.delete_entry(splt_command)
         elif splt_command[0] == PConstants.CMD_REVEAL:
             self.show(splt_command, 1)
         elif splt_command[0] == PConstants.CMD_SEARCH:
             self.search()
+        elif splt_command[0] == PConstants.CMD_UNHIDE:
+            self.unhide(splt_command)
         elif splt_command[0] == PConstants.CMD_SHOW:
             self.show(splt_command, 0)
         else:
@@ -122,6 +124,7 @@ class PConsole:
         self.print_help_command("login", "Authenticate with Email and Password")
         self.print_help_command("search", "Search for records. Optional arguments: ID, Title, username, URL")
         self.print_help_command("show", "Shows specific record. Required argument: ID")
+        self.print_help_command("unhide", "Unhide specific record. Required argument: ID")
 
         print(PConstants.CLI_NEWLINE)
 
@@ -168,11 +171,29 @@ class PConsole:
         """
 
 
-    def hide_entry(self):
+    def hide(self, cmd):
         """
         Hide entry in db
         :return:
         """
+        id = 0
+
+        if len(cmd) > 1:
+            id = cmd[1]
+        else:
+            id = input("Enter ID: ")
+
+        if not PDatabase.check_if_id_exists(id):
+            self.print_message("No record with id " + str(id) + " found." + PConstants.CLI_NEWLINE, 1)
+            return None
+
+        if PDatabase.check_if_record_hidden(id):
+            self.print_message("Record is already hidden." + PConstants.CLI_NEWLINE, 0)
+            return None
+
+        hide_query = "UPDATE credentials SET HIDDEN = 1 WHERE id = " + str(id)
+        PDatabase.execute_query(hide_query)
+        self.print_message("Record with id " + str(id) + " is now hidden." + PConstants.CLI_NEWLINE, 0)
 
 
     def delete_entry(self, cmd):
@@ -280,13 +301,17 @@ class PConsole:
             id = input("Enter ID: ")
 
         if not PDatabase.check_if_id_exists(id):
-            self.print_message("Record with ID " + id + " does not exist.", 1)
+            self.print_message("Record with ID " + id + " does not exist." + PConstants.CLI_NEWLINE, 1)
+            return None
+
+        if PDatabase.check_if_record_hidden(id):
+            self.print_message("Record with id " + str(id) + " is set to hidden." + PConstants.CLI_NEWLINE, 1)
             return None
 
         try:
             connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
             cursor = connection.cursor()
-            cursor.execute('SELECT * from credentials where id = ' + str(id))
+            cursor.execute('SELECT * from credentials where id = ' + str(id) + " and HIDDEN = 0")
             cur_result = cursor.fetchone()
             self.print_credentials(cur_result, rev)
         except Exception as e:
@@ -308,3 +333,28 @@ class PConsole:
         print("URL:\t\t" + cred[4].strip())
         print("Creation Date:\t" + cred[5])
         print("Hidden:\t\t" + cred[6] + PConstants.CLI_NEWLINE)        
+
+    
+    def unhide(self, cmd):
+        """
+        Hide entry in db
+        :return:
+        """
+        id = 0
+
+        if len(cmd) > 1:
+            id = cmd[1]
+        else:
+            id = input("Enter ID: ")
+
+        if not PDatabase.check_if_id_exists(id):
+            self.print_message("No record with id " + str(id) + " found." + PConstants.CLI_NEWLINE, 1)
+            return None
+
+        if not PDatabase.check_if_record_hidden(id):
+            self.print_message("Record is already visible." + PConstants.CLI_NEWLINE, 0)
+            return None
+
+        hide_query = "UPDATE credentials SET HIDDEN = 0 WHERE id = " + str(id)
+        PDatabase.execute_query(hide_query)
+        self.print_message("Record with id " + str(id) + " is now visible again." + PConstants.CLI_NEWLINE, 0)

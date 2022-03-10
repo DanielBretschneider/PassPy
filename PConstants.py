@@ -41,6 +41,7 @@ CMD_IMPORT = "import"
 CMD_REVEAL = "reveal"
 CMD_SHOW = "show"
 CMD_SEARCH = "search"
+CMD_UNHIDE = "unhide"
 
 #
 CMD_ATT_ENTRIES = "entries"
