@@ -77,7 +77,7 @@ class PConsole:
         elif splt_command[0] == PConstants.CMD_HIDE:
             self.hide_entry()
         elif splt_command[0] == PConstants.CMD_DELETE:
-            self.delete_entry()
+            self.delete_entry(splt_command)
         elif splt_command[0] == PConstants.CMD_REVEAL:
             self.show(splt_command, 1)
         elif splt_command[0] == PConstants.CMD_SEARCH:
@@ -182,12 +182,38 @@ class PConsole:
         """
 
 
-    def delete_entry(self):
+    def delete_entry(self, cmd):
         """
         Delete entry in db.
         :return:
         """
-    
+        id = 0
+
+        if len(cmd) > 1:
+            id = cmd[1]
+        else:
+            id = input("Enter ID: ")
+        
+        if not PDatabase.check_if_id_exists(id):
+            self.print_message("Record with ID " + id + " does not exist.", 1)
+            return None
+
+        self.show(["show", str(id)], 0)
+        delete_bool = input("Are you sure you want to permanently delete this record?(y/n) ")
+
+        if delete_bool == "y":
+            try:
+                connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+                cursor = connection.cursor()
+                cursor.execute('DELETE FROM credentials WHERE id = ' + str(id))
+                connection.commit()
+                self.print_message("Record #" + str(id) + " successfully deleted.", 0)
+            except Exception as e:
+                self.print_message("Record doesn't exist.", 1)
+                return
+        else:
+            self.print_message("process aborted.", 0)
+
 
     def export_csv(self):
         """
@@ -260,6 +286,10 @@ class PConsole:
         else:
             id = input("Enter ID: ")
 
+        if not PDatabase.check_if_id_exists(id):
+            self.print_message("Record with ID " + id + " does not exist.", 1)
+            return None
+
         try:
             connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
             cursor = connection.cursor()
@@ -268,6 +298,7 @@ class PConsole:
             self.print_credentials(cur_result, rev)
         except Exception as e:
             self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+            return
 
 
     def print_credentials(self, cred, rev):
