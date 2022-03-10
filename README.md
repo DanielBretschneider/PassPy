@@ -1,9 +1,9 @@
 # PassPy
 Simple Password Manager written in Python for Linux PCs.
 
-![Screenshot_20220310_162641](https://user-images.githubusercontent.com/8721711/157694880-e1b82687-b6f7-458a-b5cd-3f94d802de92.png)
+![Screenshot_20220310_182455](https://user-images.githubusercontent.com/8721711/157720175-7972dc73-367b-46a0-bbc6-da71bb711791.png)
 
-Fig 1.: Screenshot of help message in PassPy version 1.2.0
+Fig 1.: Screenshot of help message in PassPy version 1.2.5
 
 ![Screenshot_20220310_153826](https://user-images.githubusercontent.com/8721711/157685145-8705661e-c381-4fe1-a824-0b82c0391042.png)
 
