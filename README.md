@@ -12,3 +12,7 @@ Fig 2.: Screenshot of show, reveal, count and delete function (v1.1.9)
 ![Screenshot_20220310_154040](https://user-images.githubusercontent.com/8721711/157685175-5ae42a12-9161-4565-a5a0-94e9096461f2.png)
 
 Fig 3.: How to add a record (v1.1.9)
+
+![Screenshot_20220310_164214](https://user-images.githubusercontent.com/8721711/157698057-58f08fd2-2bf2-47bc-b8ca-f6b77901e2be.png)
+
+Fig 3.: Imported a csv-file (~/.passpy/import.csv) (v1.2.0)
