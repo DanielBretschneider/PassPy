@@ -248,6 +248,7 @@ class PConsole:
         Import credentials in CSV-file in PassPy-Format
         Title;Username;Password;URL (optional);
         """
+        err = 0
         self.print_message("File must be in following format: title;username;password;url(optional, can be left blank)", 0)
         import_file_path = input("Please specify (absolute) path to csv-file: ")
         
@@ -256,12 +257,14 @@ class PConsole:
             cnt = 1
             while line:
                 splitted_line = line.split(";")
-                self.insert_line(splitted_line, cnt)
+                err = self.insert_line(splitted_line, cnt, err)
                 line = import_file.readline()
                 cnt+=1
+        PDatabase.print_message("Successfully imported " + str(cnt-err) + " out of " + str(cnt) + " lines." + PConstants.CLI_NEWLINE, 0)
 
 
-    def insert_line(self, splitted_line, cnt):
+
+    def insert_line(self, splitted_line, cnt, err):
         """
         Check if line has right format and insert into db
         """
@@ -271,7 +274,10 @@ class PConsole:
             else:
                 PDatabase.insert(splitted_line[0], splitted_line[1], splitted_line[2])
         else:
-            self.print_message("There was error importing credentials at line #" + str(cnt), 1)                
+            err += 1
+            self.print_message("There was an error importing credentials at line #" + str(cnt), 1)         
+
+        return err        
 
 
     def check_format(self, splitted_line):
