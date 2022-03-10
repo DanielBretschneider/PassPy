@@ -5,8 +5,7 @@ from pyfiglet import Figlet
 import PConstants
 import sqlite3
 import readline
-from PDatabase import print_message
-from PDatabase import insert
+import PDatabase
 
 class PConsole:
     """
@@ -139,13 +138,25 @@ class PConsole:
             cur_result = cursor.fetchone()
             print("Total: " + str(cur_result[0]))
         except Exception as e:
-            print_message("Error while trying to connect to database. \nError:\n" + str(e), 0)
+            self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
+
 
     def add_entry(self):
         """
         Add new entry to db.
         :return:
         """
+        title = input("Please enter title of new credential entry: ")
+        username = input("username: ")
+        password = input("password: ")
+        url = input("url (optional): ")
+
+        if title and username and password:
+            PDatabase.insert(title, username, password, url)
+            self.print_message("Successfully added credentials!", 0)
+        else:
+            self.print_message("Title, username and password cannot be empty!", 1)
+
 
     def login(self):
         """
@@ -156,12 +167,6 @@ class PConsole:
     def hide_entry(self):
         """
         Hide entry in db
-        :return:
-        """
-
-    def add_entry(self):
-        """
-        Add entry!
         :return:
         """
 
@@ -181,7 +186,7 @@ class PConsole:
         Import credentials in CSV-file in PassPy-Format
         Title;Username;Password;URL (optional);
         """
-        print_message("File must be in following format: title;username;password;url(optional, can be left blank)", 0)
+        self.print_message("File must be in following format: title;username;password;url(optional, can be left blank)", 0)
         import_file_path = input("Please specify (absolute) path to csv-file: ")
         
         with open (str(import_file_path)) as import_file:
@@ -199,11 +204,11 @@ class PConsole:
         """
         if len(splitted_line) >= 3 and self.check_format(splitted_line):
             if len(splitted_line) == 4:
-                insert(splitted_line[0].strip(), splitted_line[1], splitted_line[2], splitted_line[3])
+                PDatabase.insert(splitted_line[0].strip(), splitted_line[1], splitted_line[2], splitted_line[3])
             else:
-                insert(splitted_line[0], splitted_line[1], splitted_line[2])
+                PDatabase.insert(splitted_line[0], splitted_line[1], splitted_line[2])
         else:
-            print_message("There was error importing credentials at line #" + str(cnt), 1)                
+            self.print_message("There was error importing credentials at line #" + str(cnt), 1)                
 
     def check_format(self, splitted_line):
         """

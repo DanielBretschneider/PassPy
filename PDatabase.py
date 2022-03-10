@@ -95,6 +95,21 @@ def create_database_table(db_connection, create_table_sql_statement):
         print_message("Error while executing sql-statement \n" + create_table_sql_statement + "\nError:\n" + str(e), 1)
 
 
+def execute_query(query):
+    """
+    As the name above states
+    """
+    try:
+        # execute insert statement
+        # connection to db
+        db_connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
+        cursor = db_connection.cursor()
+        cursor.execute(query)
+        db_connection.commit()
+    except Exception as e:
+        print_message("Error while executing sql query. Error:\n" + str(e), 1)
+
+
 def insert(title, username, password, url=""):
     """
     INSERT into 'credentials' table in database
@@ -102,16 +117,8 @@ def insert(title, username, password, url=""):
     # create insert statement
     insert_statement = """INSERT INTO credentials (TITLE, USERNAME, PASSWORD, URL, CREATION_DATE, HIDDEN) VALUES ('""" + title + "', '" + username + "', '" + password + "', '" + url +\
                             "', '" + get_datetime_string() + "', '" + str(0) + "')"
-    
-    try:
-        # execute insert statement
-        # connection to db
-        db_connection = sqlite3.connect(PConstants.PASSPY_DATABASE_FILE)
-        cursor = db_connection.cursor()
-        cursor.execute(insert_statement)
-        db_connection.commit()
-    except Exception as e:
-        print_message("Error while inserting into database. Error:\n" + str(e), 1)
+
+    execute_query(insert_statement)
     
 
 def get_datetime_string():
@@ -119,3 +126,5 @@ def get_datetime_string():
     Get datetime as string.
     """
     return str(datetime.now())
+
+
