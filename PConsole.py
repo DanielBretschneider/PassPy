@@ -6,6 +6,7 @@ import PConstants
 import sqlite3
 import pyminizip
 import PDatabase
+from getpass import getpass
 
 class PConsole:
     """
@@ -195,7 +196,7 @@ class PConsole:
         authenticate user
         """
         uname = input("Username: ").strip()
-        passwd = input("Password: ").strip()
+        passwd = getpass("Password: ").strip()
         u = u.strip()
         p = p.strip()
 
@@ -204,7 +205,7 @@ class PConsole:
         else:
             self.print_message("Wrong username or password." + PConstants.CLI_NEWLINE, 1)
             self.authentication(u, p)
-            
+
 
     def hide(self, cmd):
         """
