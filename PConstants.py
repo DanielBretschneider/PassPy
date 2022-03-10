@@ -16,6 +16,7 @@ VERSION = "v1.2.0"
 USER_HOME = str(Path.home())
 PASSPY_DATABASE_PATH = USER_HOME + "/.passpy/"
 PASSPY_DATABASE_FILE = PASSPY_DATABASE_PATH + "passpy.db"
+PASSPY_DATABASE_EXPORT_FILE = USER_HOME + "/Downloads/passpy_export.zip"
 
 #
 # CLI
@@ -51,6 +52,7 @@ CMD_ATT_USERNAME = "username"
 CMD_ATT_URL = "url"
 CMD_ATT_SAMPLE_PW = "**************"
 MAX_SEARCH_TERM_LENGTH = 3
+ZIP_COMPRESS_LEVEL = 5
 
 #
 # DATABASE

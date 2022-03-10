@@ -4,7 +4,7 @@
 from pyfiglet import Figlet
 import PConstants
 import sqlite3
-import readline
+import pyminizip
 import PDatabase
 
 class PConsole:
@@ -238,8 +238,10 @@ class PConsole:
     def export_csv(self):
         """
         Export contents of SQLite DB as CSV-File
-        """
-
+        """ 
+        password = input("Enter password for .zip file: ")
+        pyminizip.compress(PConstants.PASSPY_DATABASE_FILE, None, PConstants.PASSPY_DATABASE_EXPORT_FILE, password, PConstants.ZIP_COMPRESS_LEVEL)
+        self.print_message("Successfully exported password database to '" + PConstants.PASSPY_DATABASE_EXPORT_FILE + "'" + PConstants.CLI_NEWLINE, 0)
 
     def import_csv(self):
         """
