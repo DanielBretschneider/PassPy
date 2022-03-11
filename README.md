@@ -2,6 +2,7 @@
 Simple Password Manager written in Python for Linux PCs.
 
 You can easily start PassPy by tying `python3 passpy.py` into your terminal. 
+
 Make sure you've installed the requirements via `pip3 install -r requirements.txt` before working with PassPy.
 
 ![Screenshot_20220310_182817](https://user-images.githubusercontent.com/8721711/157720757-3e01f8e6-2fea-478b-b418-6900fd9590af.png)
