@@ -1,30 +1,36 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
-from pyfiglet import Figlet
+
 import PConstants
 import sqlite3
 import pyminizip
 import PDatabase
 from getpass import getpass
+from pyfiglet import Figlet
+
 
 class PConsole:
     """
     Console (CLI) Handler with following functionalities:
     * processes commands
-    * shows help message
+    * implements functionality and logic
+    * shows help message, etc.
     """
 
     def __init__(self):
         """
-        Constructors
+        Constructor of PConsole
         """
         pass
 
 
     def welcome_message(self):
         """
-        Prints welcome message on program start
+        Prints "PassPy" written in awesom font when program
+        is started
+
+        :return: None
         """
         figlet = Figlet(font='slant')
         print(figlet.renderText("PassPy"), end='')
@@ -34,8 +40,10 @@ class PConsole:
 
     def start(self):
         """
-        Start console loop
-        :return:
+        Endless loop that allows user to 
+        enter commands
+
+        :return: None
         """
         while True:
             command = self.read_command()
@@ -44,8 +52,9 @@ class PConsole:
 
     def read_command(self):
         """
-        Get command from user via input and return as string
-        :return:
+        Get command from user via STDIN
+
+        :return: User input
         """
         command = input(PConstants.CLI_PROMPT)
         return command
@@ -53,8 +62,11 @@ class PConsole:
 
     def process_command(self, command):
         """
-        Process given command
-        :return:
+        Processes given command
+        This methode defines which commands will be 
+        accepted and what will happen afterwards
+
+        :return: None
         """
         command = command.lower().rstrip().lstrip()
         splt_command = command.split(" ")
@@ -91,10 +103,11 @@ class PConsole:
 
     def print_message(self, text, type):
         """
-        Print message to terminal
+        Prints a formatted message to terminal
+
         :param text: Message Content
         :param type: (int) INFO (0), ERROR (1)
-        :return:
+        :return: None
         """
         if type == 1:
             print(PConstants.CLI_MSG_ERR + text)
@@ -104,9 +117,9 @@ class PConsole:
 
     def print_help_message(self):
         """
-        Print help message
+        Print help message.
 
-        :return:
+        :return: None
         """
         print("\nCommand | Description")
         print("-----------------------------------------")
@@ -127,9 +140,10 @@ class PConsole:
 
     def print_help_command(self, command, description):
         """
-        Line for command
+        Formatted output for a passpy command in help message.
+        
         :param command: string
-        :return:
+        :return: None
         """
         print(PConstants.CLI_COL_BOLD + command + PConstants.CLI_COL_END +
               PConstants.CLI_TAB + description)
@@ -137,16 +151,20 @@ class PConsole:
 
     def print_db_count(self):
         """
-        Prints the number of entries in db
-        :return:
+        Prints total number of records stored in database.
+        In reality: highest number in column id, psst!
+
+        :return: None
         """ 
         print("Total number of records in database: " + PDatabase.get_count() + PConstants.CLI_NEWLINE)
 
 
     def add_entry(self):
         """
-        Add new entry to db.
-        :return:
+        This method allows the user to input a new set of credentials.
+        Title, username and password must not be empty, URL is optional.
+
+        :return: None
         """
         title = input("Please enter title of new credential entry: ")
         username = input("username: ")
@@ -162,8 +180,11 @@ class PConsole:
 
     def login(self):
         """
-        Login / Authenticate
-        :return:
+        To use PassPy the user has to register. If 
+        he is registered, he or she has to login.
+        Simple as that.
+
+        :return: None
         """
         # check if user already registrated
         PDatabase.init_auth_file()
@@ -177,7 +198,10 @@ class PConsole:
 
     def get_auth_data(self):
         """
-        Get username and password for auth file
+        This method fetches the secret authentification 
+        credentials stored in passpy directory. 
+
+        :return: username and password as string
         """
         uname = ""
         passwd = ""
@@ -193,7 +217,10 @@ class PConsole:
 
     def authentication(self, u, p):
         """
-        authenticate user
+        This method compares the locally stored credentials with what
+        the user has typed in. 
+
+        :return: None
         """
         uname = input("Username: ").strip()
         passwd = getpass("Password: ").strip()
@@ -210,8 +237,11 @@ class PConsole:
 
     def hide(self, cmd):
         """
-        Hide entry in db
-        :return:
+        This method allows the user to 'hide' certain records. 
+        If he or she wants to do that, this code makes it possible! 
+        Cheers!
+
+        :return: None
         """
         id = 0
 
@@ -239,8 +269,10 @@ class PConsole:
 
     def delete_entry(self, cmd):
         """
-        Delete entry in db.
-        :return:
+        Lets the user delete a certain record with 
+        given id.
+
+        :return: None
         """
         id = 0
 
@@ -276,16 +308,21 @@ class PConsole:
 
     def export_csv(self):
         """
-        Export contents of SQLite DB as CSV-File
+        Export contents of SQLite DB as CSV-File inside a password protected zip file
+
+        :return: None
         """ 
         password = getpass("Enter password for .zip file: ")
         pyminizip.compress(PConstants.PASSPY_DATABASE_FILE, None, PConstants.PASSPY_DATABASE_EXPORT_FILE, password, PConstants.ZIP_COMPRESS_LEVEL)
         self.print_message("Successfully exported password database to '" + PConstants.PASSPY_DATABASE_EXPORT_FILE + "'" + PConstants.CLI_NEWLINE, 0)
 
+
     def import_csv(self):
         """
-        Import credentials in CSV-file in PassPy-Format
+        Import credentials inside CSV-file in PassPy-Format
         Title;Username;Password;URL (optional);
+
+        :return: None
         """
         err = 0
         self.print_message("File must be in following format: title;username;password;url(optional, can be left blank)", 0)
@@ -302,10 +339,11 @@ class PConsole:
         PDatabase.print_message("Successfully imported " + str(cnt-err) + " out of " + str(cnt) + " lines." + PConstants.CLI_NEWLINE, 0)
 
 
-
     def insert_line(self, splitted_line, cnt, err):
         """
-        Check if line has right format and insert into db
+        Adjusts the INSERT-Statement. Depends on the length (or if URL was left blank, or not)
+
+        :return: None
         """
         if len(splitted_line) >= 3 and self.check_format(splitted_line):
             if len(splitted_line) == 4:
@@ -321,7 +359,9 @@ class PConsole:
 
     def check_format(self, splitted_line):
         """
-        Check if first three elements are filled
+        Verifies if title, username and password are NOT empty.
+
+        :return: True, if the mandatory fields or not empty. If they are, False will be returned.
         """
         for i in range(3):
             if str(splitted_line[i].strip()):
@@ -334,9 +374,10 @@ class PConsole:
 
     def search(self, cmd):
         """
-        Implements search function to db
-        (returns more than one result, if found)
-        :return:
+        Implements the search function. User can search for title, username and URL.
+        It is mandatory that the search term is at least three characters long!
+
+        :return: None
         """
         search_term = 0
 
@@ -364,13 +405,14 @@ class PConsole:
                 self.print_message("No records found for '" + search_term + "'." + PConstants.CLI_NEWLINE, 0)
         except Exception as e:
             self.print_message("Error while trying to connect to database. \nError:\n" + str(e), 1)
-            return
+            return None
+
 
     def show(self, cmd, rev):
         """
-        Implements search function to db
-        (returns only data if search term is correct)
-        :return:
+        Prints a certain record formatted.
+
+        :return: None
         """
         id = 0
 
@@ -404,7 +446,9 @@ class PConsole:
 
     def print_credentials(self, cred, rev):
         """
-        Print credentials formatted
+        Actually prints a certain record formatted.
+
+        :return: None
         """
         print(PConstants.CLI_NEWLINE + "ID:\t\t" + str(cred[0]))
         print("Title:\t\t" + cred[1])
@@ -420,8 +464,7 @@ class PConsole:
 
     def print_mutliple_credentials(self, cred_list):
         """
-        prints multiple credentials and uses print_credential function
-        in a loop
+        Prints multiple (search results) credentials formatted.
         """
         for credential_item in cred_list:
             self.print_credentials(credential_item, 0)
@@ -430,8 +473,9 @@ class PConsole:
     
     def unhide(self, cmd):
         """
-        Hide entry in db
-        :return:
+        If a record was hidden, this method allows to reverse the evil curse!
+
+        :return: None
         """
         id = 0
 
@@ -459,7 +503,11 @@ class PConsole:
     
     def check_if_id_valid(self, id):
         """
-        Check if id is not empty and a number
+        Simple function to check if given (user input) id 
+        is either an integer or a string containing only
+        numeric characters.
+
+        :return: True, if it is a valid (integer / numeric string) ID.
         """
         if id and (type(id) == int or id.isnumeric()):
             return True

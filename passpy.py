@@ -4,21 +4,19 @@
 # Simple password manager written in python
 #
 # (C) 2022 Daniel Bretschneider, Wien
-# Using 
+# Using GNU General Public License v3.0
 # email daniel@bretschneider.cc
 # -----------------------------------------------------------
 
-from PConsole import PConsole
-import PConstants
+import PConsole
 import PDatabase
 
 
 def setup():
     """
     Setup program sequence
-
-    :param self:
-    :return:
+    
+    :return: None
     """
     # start console
     console = PConsole()
@@ -32,10 +30,10 @@ def setup():
     console.start()
 
 
-
-
 if __name__ == '__main__':
     """
     Main method
+
+    :return: None
     """
     setup()

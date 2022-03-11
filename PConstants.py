@@ -19,6 +19,7 @@ PASSPY_DATABASE_FILE = PASSPY_DATABASE_PATH + "passpy.db"
 PASSPY_DATABASE_EXPORT_FILE = USER_HOME + "/Downloads/passpy_export.zip"
 PASSPY_AUTH_FILE = PASSPY_DATABASE_PATH + "auth.txt"
 
+
 #
 # CLI
 #
