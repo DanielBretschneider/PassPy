@@ -19,13 +19,13 @@ def setup():
     
     :return: None
     """
+    # create / check db files
+    PDatabase.create_database_if_not_exists()
+    
     # start console
     console = PConsole()
     console.welcome_message()
     console.login()
-
-    # create / check db files
-    PDatabase.create_database_if_not_exists()
 
     # begin
     console.start()

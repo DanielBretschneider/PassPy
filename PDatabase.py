@@ -80,7 +80,7 @@ def init_auth_file():
     :return: None
     """
     if not os.path.exists(PConstants.PASSPY_AUTH_FILE) or os.path.getsize(PConstants.PASSPY_AUTH_FILE) == 0:
-        auth_file = open(PConstants.PASSPY_AUTH_FILE, "w")
+        auth_file = open(PConstants.PASSPY_AUTH_FILE, "x")
         print_message("Registering. Please remember your login credentials!", 0)
         uname = input("username: ")
         passwd = input("password: ")
