@@ -21,8 +21,10 @@ class PConsole:
     def __init__(self):
         """
         Constructor of PConsole
+
+        :return: None
         """
-        pass
+        return None
 
 
     def welcome_message(self):

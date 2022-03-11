@@ -8,8 +8,9 @@
 # email daniel@bretschneider.cc
 # -----------------------------------------------------------
 
-import PConsole
+
 import PDatabase
+from PConsole import PConsole
 
 
 def setup():
